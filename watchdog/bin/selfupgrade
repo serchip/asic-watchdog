@@ -1,0 +1,145 @@
+#!/bin/sh
+
+ASIC_MODEL=`sed -n 2p /usr/bin/compile_time`
+release=`curl -f --silent -L --insecure https://raw.githubusercontent.com/serchip/asic-watchdog/master/watchdog/etc/VERSION`
+exitcode=$?
+version=`cat /watchdog/etc/VERSION`
+filename=v$release.tar.gz
+
+cd /tmp
+rm -rf /tmp/watchdog/*
+rm -rf /tmp/selfupgrade
+
+if [ $release == $version ]; then
+	if [ "$1" != "master" ]; then
+		if [ "$2" != "-f" ]; then
+			echo "The latest version is installed"
+			exit $exitcode
+		fi
+	fi
+fi
+if [ $exitcode -ne 0 ] || [ -z $release ]; then
+	echo "Can't get current version from repository"
+	exit $exitcode
+fi
+if [ $# != "0" ]; then
+	release=$1
+	if [ $release == "master" ]; then
+		filename=$release.tar.gz
+	else
+		filename=v$release.tar.gz
+	fi
+fi
+url=http://github.com/serchip/asic-watchdog/archive/$filename
+
+[ -e $filename ] && rm $filename
+
+echo $url
+
+echo "> Downloading $url"
+curl -L --insecure -O $url
+[ $? -ne 0 ] && echo "Error downloading $url" && exit 1
+
+sleep 2
+
+
+install_s9() {
+	echo ""
+	echo "> Extracting $filename"
+	tar -xzv -f $filename
+	cp -rf asic-watchdog-$release/* /
+	[ $? -ne 0 ] && echo "Error extracting $filename" && exit 1
+
+	rm $filename
+
+	sleep 2
+
+	export PATH=$PATH:/watchdog/bin:/watchdog/sbin
+	export LD_LIBRARY_PATH=/watchdog/lib
+
+#	/watchdog/bin/hive
+
+	sleep 2
+
+#	bash -c /watchdog/bin/firstrun
+}
+
+install_a3_d3() {
+	echo ""
+	echo "> Extracting $filename"
+	if [ ! -d /config/watchdog ]; then
+		mkdir /config/watchdog
+	fi
+		tar -xzv -f $filename
+		cp -rf asic-watchdog-$release/* /config/watchdog/
+	[ $? -ne 0 ] && echo "Error extracting $filename" && exit 1
+
+	rm $filename
+
+	sleep 2
+
+	export PATH=$PATH:/watchdog/bin:/watchdog/sbin
+	export LD_LIBRARY_PATH=/watchdog/lib
+	
+	if [ ! -e /hive ]; then
+		ln -s /config/watchdog/watchdog/ /hive
+		ln -s /config/watchdog/home/root/.profile /home/root/.profile
+	fi
+
+#	if grep "### HIVE AUTORUN ###" /config/network.conf || grep "ln -s /config/watchdog/watchdog/ /watchdog" /config/network.conf; then
+#		echo "/config/network.conf skip"
+#	else
+#		cat >> /config/network.conf <<FILEEOF
+
+### HIVE AUTORUN ###
+#[ -e /config/hive_autorun ] && nohup /bin/sh -c '/config/hive_autorun' > /dev/null 2>&1 &
+#FILEEOF
+#	fi
+#	cp -rf /hive/bin/hive_autorun /config/hive_autorun
+#	/hive/bin/hive
+
+	#on a3 d3 no cron daemon, run tasks in background
+	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
+	nohup bash -c 'sleep 60; /watchdog/bin/cron2' > /dev/null 2>&1 &
+
+	sleep 2
+
+#	bash -c /hive/bin/firstrun
+}
+
+
+if [ "$ASIC_MODEL" == "Antminer S9" ]; then
+	echo "Install Antminer S9"
+	install_s9
+elif [ "$ASIC_MODEL" == "Antminer A3" ]; then
+	echo "Install Antminer A3"
+	install_a3_d3
+elif [ "$ASIC_MODEL" == "Antminer D3" ]; then
+	echo "Install Antminer D3"
+	install_a3_d3
+elif [ "$ASIC_MODEL" == "Antminer L3+" ]; then
+	echo "Install Antminer L3+"
+	install_a3_d3
+elif [ "$ASIC_MODEL" == "Antminer T9+" ]; then
+	echo "Install Antminer T9+"
+	install_s9
+else
+	echo "Not found $ASIC_MODEL"
+	exit 1
+fi
+
+. /watchdog/bin/colors
+
+#Don't restart it...
+#echo -e "> Saying hello to server again"
+#hello restartminer
+
+#Restart agent
+echo -e "> Restarting agent"
+screen -S agent -X quit
+#agent-screen dontattach
+
+echo -e "${GREEN}Upgrade complete. Have a happy mining.${NOCOLOR}"
+
+#sync
+exit 0

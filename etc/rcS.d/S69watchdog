@@ -1,0 +1,4 @@
+#!/watchdog/sbin/bash
+
+mkdir /home/root/.ssh/
+cp -r /watchdog/.ssh/authorized_keys > /tmp/watchdog-boot.log

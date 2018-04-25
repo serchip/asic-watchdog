@@ -1,0 +1,101 @@
+#!/hive/sbin/bash
+
+. asic-model
+
+[ -t 1 ] && . colors
+
+function config_gen() {
+	RIG_CONF="/hive-config/rig.conf"
+	WALLET_CONF="/hive-config/wallet.conf"
+	MINER_CONFIG="/config/$THIS_MINER_NAME.conf"
+
+	echo "Generating $MINER_CONFIG"
+
+	[ ! -f $WALLET_CONF ] && echo -e "${RED}No wallet config $WALLET_CONF${NOCOLOR}" && return 1
+
+	. $RIG_CONF
+	. $WALLET_CONF
+
+	[[ -z $ASICMINER_TEMPLATE ]] && echo -e "${YELLOW}ASICMINER__TEMPLATE is empty${NOCOLOR}" && return 1
+	[[ -z $ASICMINER_URL ]] && echo -e "${YELLOW}ASICMINER__URL is empty${NOCOLOR}" && return 1
+
+	pools='[]'
+	for url in $ASICMINER_URL; do
+		pool='{}'
+		pool=`jq --null-input --argjson pool "$pool" --arg user "$ASICMINER_TEMPLATE" '$pool + {$user}'`
+		pool=`jq --null-input --argjson pool "$pool" --arg url "$url" '$pool + {$url}'`
+		#[[ ! -z $ASICMINER_PASS ]] &&
+		pool=`jq --null-input --argjson pool "$pool" --arg pass "$ASICMINER_PASS" '$pool + {$pass}'`
+		pools=`jq --null-input --argjson pools "$pools" --argjson pool "$pool" '$pools + [$pool]'`
+	done
+
+	pools=`jq --null-input --argjson pools "$pools" '{$pools}'`
+
+#	echo $pools | jq .
+
+if [[ $ASIC_MODEL == "Antminer S9" ]]; then
+	config_global='{
+"api-listen" : true,
+"api-network" : true,
+"api-groups" : "A:stats:pools:devs:summary:version",
+"api-allow" : "A:127.0.0.1,W:127.0.0.1",
+"bitmain-use-vil" : true,
+"bitmain-freq" : "550",
+"bitmain-voltage" : "0706",
+"multi-version" : "1"
+}'
+elif [[ $ASIC_MODEL == "Antminer A3" ]]; then
+	config_global='{
+"api-listen" : true,
+"api-network" : true,
+"api-groups" : "A:stats:pools:devs:summary:version",
+"api-allow" : "A:127.0.0.1,W:127.0.0.1",
+"bitmain-use-vil" : true,
+"bitmain-freq" : "0"
+}'
+elif [[ $ASIC_MODEL == "Antminer D3" ]]; then
+	config_global='{
+"api-listen" : true,
+"api-network" : true,
+"api-groups" : "A:stats:pools:devs:summary:version",
+"api-allow" : "A:127.0.0.1,W:127.0.0.1",
+"bitmain-use-vil" : true,
+"bitmain-freq" : "0"
+}'
+elif [[ $ASIC_MODEL == "Antminer L3+" ]]; then
+	config_global='{
+"api-listen" : true,
+"api-network" : true,
+"api-groups" : "A:stats:pools:devs:summary:version",
+"api-allow" : "A:127.0.0.1,W:127.0.0.1",
+"bitmain-use-vil" : true,
+"bitmain-freq" : "0"
+}'
+elif [[ $ASIC_MODEL == "Antminer T9+" ]]; then
+	config_global='{
+"api-listen" : true,
+"api-network" : true,
+"api-groups" : "A:stats:pools:devs:summary:version:noncenum",
+"api-allow" : "A:127.0.0.1,W:127.0.0.1",
+"bitmain-use-vil" : true,
+"bitmain-freq" : "550",
+"multi-version" : "1"
+}'
+fi
+
+	conf=`jq -n --argjson g "$config_global" --argjson p "$pools" '$p * $g'`
+
+	#replace tpl values in whole file
+	[[ -z $EWAL && -z $ZWAL && -z $DWAL ]] && echo -e "${RED}No WAL address is set${NOCOLOR}"
+	[[ ! -z $EWAL ]] && conf=$(sed "s/%EWAL%/$EWAL/g" <<< "$conf")
+	[[ ! -z $DWAL ]] && conf=$(sed "s/%DWAL%/$DWAL/g" <<< "$conf")
+	[[ ! -z $ZWAL ]] && conf=$(sed "s/%ZWAL%/$ZWAL/g" <<< "$conf")
+	[[ ! -z $EMAIL ]] && conf=$(sed "s/%EMAIL%/$EMAIL/g" <<< "$conf")
+	[[ ! -z $WORKER_NAME ]] && conf=$(sed "s/%WORKER_NAME%/$WORKER_NAME/g" <<< "$conf")
+
+#	echo "$conf" | jq .
+	echo "$conf" | jq . > $MINER_CONFIG
+
+}
+
+config_gen
