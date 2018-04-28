@@ -83,7 +83,9 @@ install_a3_d3() {
 	
 	if [ ! -e /watchdog ]; then
 		ln -s /config/watchdog/watchdog/ /watchdog
-		ln -s /config/watchdog/home/root/.profile /home/root/.profile
+		if [ ! -f /home/root/.profile ]; then
+		    ln -s /config/watchdog/home/root/.profile /home/root/.profile
+		fi
         if [ ! -d /home/root/.ssh/ ]; then
             mkdir /home/root/.ssh/
         fi
