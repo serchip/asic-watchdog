@@ -81,7 +81,7 @@ install_a3_d3() {
 	export PATH=$PATH:/watchdog/bin:/watchdog/sbin
 	export LD_LIBRARY_PATH=/watchdog/lib
 	
-	if [ ! -e /hive ]; then
+	if [ ! -e /watchdog ]; then
 		ln -s /config/watchdog/watchdog/ /hive
 		ln -s /config/watchdog/home/root/.profile /home/root/.profile
 	fi
@@ -99,8 +99,8 @@ install_a3_d3() {
 #	/hive/bin/hive
 
 	#on a3 d3 no cron daemon, run tasks in background
-	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
-	nohup bash -c 'sleep 60; /watchdog/bin/cron2' > /dev/null 2>&1 &
+#	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
+#	nohup bash -c 'sleep 60; /watchdog/bin/cron2' > /dev/null 2>&1 &
 
 	sleep 2
 
