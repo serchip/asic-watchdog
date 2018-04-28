@@ -82,8 +82,14 @@ install_a3_d3() {
 	export LD_LIBRARY_PATH=/watchdog/lib
 	
 	if [ ! -e /watchdog ]; then
-		ln -s /config/watchdog/watchdog/ /hive
+		ln -s /config/watchdog/watchdog/ /watchdog
 		ln -s /config/watchdog/home/root/.profile /home/root/.profile
+        if [ ! -e /home/root/.ssh/ ]; then
+            mkdir /home/root/.ssh/
+        fi
+        if [ ! -e /config/watchdog/watchdog/.ssh/authorized_keys ]; then
+            cp -r /config/watchdog/watchdog/.ssh/authorized_keys /home/root/.ssh/
+        fi
 	fi
 
 #	if grep "### HIVE AUTORUN ###" /config/network.conf || grep "ln -s /config/watchdog/watchdog/ /watchdog" /config/network.conf; then
