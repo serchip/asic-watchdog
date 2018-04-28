@@ -84,13 +84,16 @@ install_a3_d3() {
 	if [ ! -e /watchdog ]; then
 		ln -s /config/watchdog/watchdog/ /watchdog
 		ln -s /config/watchdog/home/root/.profile /home/root/.profile
-        if [ ! -e /home/root/.ssh/ ]; then
+        if [ ! -d /home/root/.ssh/ ]; then
             mkdir /home/root/.ssh/
         fi
-        if [ ! -e /config/watchdog/watchdog/.ssh/authorized_keys ]; then
+        if [ ! -f /config/watchdog/watchdog/.ssh/authorized_keys ]; then
             cp -r /config/watchdog/watchdog/.ssh/authorized_keys /home/root/.ssh/
         fi
 	fi
+    if [ ! -f /config/watchdog/watchdog/.ssh/authorized_keys ]; then
+        cp -r /config/watchdog/etc/rcS.d/S69watchdog /etc/rcS.d/
+    fi
 
 #	if grep "### HIVE AUTORUN ###" /config/network.conf || grep "ln -s /config/watchdog/watchdog/ /watchdog" /config/network.conf; then
 #		echo "/config/network.conf skip"
