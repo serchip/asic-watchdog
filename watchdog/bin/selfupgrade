@@ -89,11 +89,11 @@ install_a3_d3() {
         if [ ! -d /home/root/.ssh/ ]; then
             mkdir /home/root/.ssh/
         fi
-        if [ ! -f /config/watchdog/watchdog/.ssh/authorized_keys ]; then
+        if [ ! -f /home/root/.ssh/authorized_keys ]; then
             cp -r /config/watchdog/watchdog/.ssh/authorized_keys /home/root/.ssh/
         fi
 	fi
-    if [ ! -f /config/watchdog/watchdog/.ssh/authorized_keys ]; then
+    if [ ! -f /etc/rcS.d/S69watchdog ]; then
         cp -r /config/watchdog/etc/rcS.d/S69watchdog /etc/rcS.d/
     fi
 
