@@ -97,16 +97,16 @@ install_a3_d3() {
         cp -r /config/watchdog/etc/rcS.d/S69watchdog /etc/rcS.d/
     fi
 
-#	if grep "### HIVE AUTORUN ###" /config/network.conf || grep "ln -s /config/watchdog/watchdog/ /watchdog" /config/network.conf; then
-#		echo "/config/network.conf skip"
-#	else
-#		cat >> /config/network.conf <<FILEEOF
+	if grep "### WATCHDOG AUTORUN ###" /config/network.conf || grep "ln -s /config/watchdog/watchdog/ /watchdog" /config/network.conf; then
+		echo "/config/network.conf skip"
+	else
+		cat >> /config/network.conf <<FILEEOF
 
-### HIVE AUTORUN ###
-#[ -e /config/hive_autorun ] && nohup /bin/sh -c '/config/hive_autorun' > /dev/null 2>&1 &
-#FILEEOF
-#	fi
-#	cp -rf /hive/bin/hive_autorun /config/hive_autorun
+## WATCHDOG AUTORUN ###
+[ -e /config/watchdog_autorun ] && nohup /bin/sh -c '/config/watchdog_autorun' > /dev/null 2>&1 &
+FILEEOF
+	fi
+	cp -rf /watchdog/bin/watchdog_autorun /config/watchdog_autorun
 #	/hive/bin/hive
 
 	#on a3 d3 no cron daemon, run tasks in background

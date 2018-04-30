@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ ! -e /watchdog ]; then
+	ln -s /config/watchdog/watchdog/ /watchdog
+	ln -s /config/watchdog/home/root/.profile /home/root/.profile
+    if [ ! -d /home/root/.ssh/ ]; then
+        mkdir /home/root/.ssh/
+    fi
+    if [ ! -f /home/root/.ssh/authorized_keys ]; then
+        cp -r /config/watchdog/watchdog/.ssh/authorized_keys /home/root/.ssh/
+    fi
+
+#	nohup /hive/sbin/bash -c 'sleep 30; /hive/bin/hive > /tmp/hive-boot.log; echo "Running hive..."' > /dev/null 2>&1 &
+#	nohup /hive/sbin/bash -c 'sleep 40; /hive/bin/hello' > /dev/null 2>&1 &
+#	nohup /hive/sbin/bash -c 'sleep 60; /hive/bin/cron1' > /dev/null 2>&1 &
+#	nohup /hive/sbin/bash -c 'sleep 60; /hive/bin/cron2' > /dev/null 2>&1 &
+fi
