@@ -102,7 +102,7 @@ install_a3_d3() {
 	else
 		cat >> /config/network.conf <<FILEEOF
 
-## WATCHDOG AUTORUN ###
+### WATCHDOG AUTORUN ###
 [ -e /config/watchdog_autorun ] && nohup /bin/sh -c '/config/watchdog_autorun' > /dev/null 2>&1 &
 FILEEOF
 	fi
