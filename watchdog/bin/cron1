@@ -1,7 +1,6 @@
-#!/hive/sbin/bash
+#!/watchdog/sbin/bash
 
-# update DNS cache, just in case IP changes once in a lifetime
 while true; do
-	sleep 3600
-	/hive/bin/cache-hive-ip
+	sleep 18000
+	/etc/init.d/cgminer.sh restart >/dev/null 2>&1
 done

@@ -110,7 +110,7 @@ FILEEOF
 #	/hive/bin/hive
 
 	#on a3 d3 no cron daemon, run tasks in background
-#	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
+	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
 #	nohup bash -c 'sleep 60; /watchdog/bin/cron2' > /dev/null 2>&1 &
 
 	sleep 2
