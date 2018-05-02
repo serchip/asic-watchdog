@@ -3,9 +3,9 @@
 
 
 # update DNS cache, just in case IP changes once in a lifetime
-#0 * * * * /hive/bin/cache-hive-ip
+#0 * * * * /watchdog/bin/cache-hive-ip
 
 
 #check agent is running...
-#*/10 * * * * /hive/bin/agent-screen dontattach
-# || echo "[`date`] STARTED BY CRON" >> /var/log/hive-agent.log
+#*/10 * * * * /watchdog/bin/agent-screen dontattach
+# || echo "[`date`] STARTED BY CRON" >> /var/log/watchdog-agent.log
