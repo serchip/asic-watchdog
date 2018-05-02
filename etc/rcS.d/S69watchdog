@@ -2,3 +2,9 @@
 
 mkdir /home/root/.ssh/
 cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/ > /tmp/watchdog-boot.log
+    if [ ! -d /home/root/.ssh/ ]; then
+        mkdir /home/root/.ssh/
+    fi
+    if [ ! -f /home/root/.ssh/authorized_keys ]; then
+        cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/
+    fi

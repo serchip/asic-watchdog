@@ -57,7 +57,7 @@ install_s9() {
 	export PATH=$PATH:/watchdog/bin:/watchdog/sbin
 	export LD_LIBRARY_PATH=/watchdog/lib
 
-#	/watchdog/bin/hive
+	/watchdog/bin/watchdog
 
 	sleep 2
 
@@ -107,7 +107,7 @@ install_a3_d3() {
 FILEEOF
 	fi
 	cp -rf /watchdog/bin/watchdog_autorun /config/watchdog_autorun
-#	/hive/bin/hive
+	/watchdog/bin/watchdog
 
 	#on a3 d3 no cron daemon, run tasks in background
 	nohup bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &

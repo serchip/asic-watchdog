@@ -10,8 +10,8 @@ if [ ! -e /watchdog ]; then
         cp -r /config/watchdog/watchdog/.ssh/authorized_keys /home/root/.ssh/
     fi
 
-#	nohup /hive/sbin/bash -c 'sleep 30; /hive/bin/hive > /tmp/hive-boot.log; echo "Running hive..."' > /dev/null 2>&1 &
-#	nohup /hive/sbin/bash -c 'sleep 40; /hive/bin/hello' > /dev/null 2>&1 &
-	nohup /hive/sbin/bash -c 'sleep 60; /hive/bin/cron1' > /dev/null 2>&1 &
-#	nohup /hive/sbin/bash -c 'sleep 60; /hive/bin/cron2' > /dev/null 2>&1 &
+#	nohup /watchdog/sbin/bash -c 'sleep 30; /watchdog/bin/watchdog > /tmp/hive-boot.log; echo "Running hive..."' > /dev/null 2>&1 &
+#	nohup /watchdog/sbin/bash -c 'sleep 40; /watchdog/bin/hello' > /dev/null 2>&1 &
+	nohup /watchdog/sbin/bash -c 'sleep 60; /watchdog/bin/cron1' > /dev/null 2>&1 &
+#	nohup /watchdog/sbin/bash -c 'sleep 60; /watchdog/bin/cron2' > /dev/null 2>&1 &
 fi
