@@ -85,5 +85,5 @@ fi
 #miner config-gen
 
 
-echo2 "> Hive Start Finished"
+echo2 "> Watchdog Start Finished"
 exit 0

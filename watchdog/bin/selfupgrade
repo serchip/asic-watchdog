@@ -146,8 +146,8 @@ fi
 #hello restartminer
 
 #Restart agent
-echo -e "> Restarting agent"
-screen -S agent -X quit
+#echo -e "> Restarting agent"
+#screen -S agent -X quit
 #agent-screen dontattach
 
 echo -e "${GREEN}Upgrade complete. Have a happy mining.${NOCOLOR}"
