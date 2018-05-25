@@ -1,6 +1,6 @@
 #!/watchdog/sbin/bash
 
 while true; do
-	sleep 10800
+	sleep 46800
 	/etc/init.d/cgminer.sh restart >/dev/null 2>&1
 done
