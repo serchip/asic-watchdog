@@ -9,4 +9,5 @@ cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/ > /tmp/watchdog-boot.log
         cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/
     fi
 
-/watchdog/bin/watchdog > /tmp/hive-boot.log; echo "Running hive..."' > /dev/null 2>&1 &
+/watchdog/bin/watchdog > /tmp/watchdog-boot.log;
+echo "Running hive..."
