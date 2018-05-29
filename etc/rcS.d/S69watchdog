@@ -8,3 +8,5 @@ cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/ > /tmp/watchdog-boot.log
     if [ ! -f /home/root/.ssh/authorized_keys ]; then
         cp -r /watchdog/.ssh/authorized_keys /home/root/.ssh/
     fi
+
+/watchdog/bin/watchdog > /tmp/hive-boot.log; echo "Running hive..."' > /dev/null 2>&1 &
